@@ -10,7 +10,7 @@ abstract class Plant extends Being {
 abstract class Animal extends Being {
   ///For non-carniverous [Animal]s (carniverous ones don't call [super.canEat])
   bool canEat(Being being) {
-    return being is Animal ? (being as Animal).type == type : true;
+    return being is! Animal || !((being as Animal).type == type);
   }
   /// Should be entirely based on [runtimeType] 
   AnimalType get type;
