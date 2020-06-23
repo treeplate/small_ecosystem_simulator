@@ -10,11 +10,11 @@ void main() {
   Plan testPlan1 = Plan(() => times++);
   test("World.tick ticks", () {
     world.tick(testPlan1);
-    expect(times == 1);
+    expect(times, equals(1));
   });
   Plan plantTestPlan = Plan.addPlant(() => TestPlant(() => times++));
   test("World.tick ticks beings", () {
     world.tick(plantTestPlan);
-    expect(times == 2);
+    expect(times, equals(2));
   });
 }
