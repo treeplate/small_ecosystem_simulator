@@ -12,7 +12,7 @@ void main() {
     world.tick(testPlan1);
     expect(times, equals(1));
   });
-  Plan plantTestPlan = Plan.addPlant(() => TestPlant(() => times++));
+  Plan plantTestPlan = Plan.addPlant(() => TestPlant((World w) { times++; }));
   test("World.tick ticks beings", () {
     world.tick(plantTestPlan);
     expect(times, equals(2));
