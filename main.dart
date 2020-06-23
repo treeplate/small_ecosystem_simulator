@@ -2,7 +2,6 @@ import 'dart:io';
 import 'beings.dart';
 void main() {
   stdout.write(Process.runSync("clear", [], runInShell: true).stdout);
-  print("Hello World!");
   expect(TestAnimal().canEat(TestPlant()), "Test #1 failed");
   expect(!TestAnimal().canEat(TestAnimal()), "Test #2 failed");
 }

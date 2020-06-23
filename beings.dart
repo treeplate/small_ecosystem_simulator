@@ -24,7 +24,6 @@ class TestPlant extends Plant {
 
 class TestAnimal extends Animal{
   AnimalType get type => AnimalType.test;
-  bool canEat(Being being) => super.canEat(being) && being is Plant; 
 }
 enum AnimalType { test }
 enum PlantType { test }
