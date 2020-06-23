@@ -5,6 +5,7 @@ abstract class Being {
 typedef PlanCallback = void Function(World w);
 typedef AnimalFactory = Animal Function();
 typedef PlantFactory = Plant Function();
+typedef Callback = void Function();
 class Plan {
   Plan(this._callback);
   factory Plan.idle() => Plan((World w) {});
@@ -46,8 +47,8 @@ abstract class Animal extends Being {
 class TestPlant extends Plant {
   PlantType get type => PlantType.test;
   TestPlant(this.callback);
-  PlanCallback callback;
-  void _tick(World w) => callback(w);
+  Callback callback;
+  void _tick() => callback();
 }
 
 class TestAnimal extends Animal{
