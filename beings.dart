@@ -2,19 +2,22 @@ abstract class Being {
   bool _dead = false;
   void _tick() {}
 }
+typedef PlanCallback = void Function(World w);
+typedef AnimalFactory = Animal Function();
+typedef PlantFactory = Plant Function();
 class Plan {
   Plan(this._callback);
   factory Plan.idle() => Plan((World w) {});
-  factory Plan.addPlant(Plant Function() create) => Plan((World w) {w._addPlant(create);});
-  factory Plan.addAnimal(Animal Function() create) => Plan((World w) {w._addAnimal(create);});
-  final void Function(World w) _callback;
+  factory Plan.addPlant(PlantFactory create) => Plan((World w) {w._addPlant(create);});
+  factory Plan.addAnimal(AnimalFactory create) => Plan((World w) {w._addAnimal(create);});
+  final PlanCallback _callback;
 }
 class World {
   Set<Being> _beings = {};
-  void _addPlant(Plant Function() create) {
+  void _addPlant(PlantFactory create) {
     _beings.add(create());
   }
-  void _addAnimal(Animal Function() create) {
+  void _addAnimal(AnimalFactory create) {
     _beings.add(create());
   }
   void tick(Plan plan) {
@@ -42,10 +45,14 @@ abstract class Animal extends Being {
 
 class TestPlant extends Plant {
   PlantType get type => PlantType.test;
+  TestPlant(this.callback);
+  PlanCallback callback;
+  void tick(World w) => callback(w);
 }
 
 class TestAnimal extends Animal{
   AnimalType get type => AnimalType.test;
 }
+
 enum AnimalType { test }
 enum PlantType { test }

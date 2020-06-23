@@ -7,9 +7,14 @@ void main() {
   });
   var times = 0;
   var world = World();
-  Plan plan = Plan(() => times++);
+  Plan testPlan1 = Plan(() => times++);
   test("World.tick ticks"), () {
-    world.tick(plan);
+    world.tick(testPlan1);
     expect(times == 1);
+  });
+  Plan plantTestPlan = Plan.addPlant(() => TestPlant(() => times++));
+  test("World.tick ticks beings", () {
+    world.tick(plantTestPlan);
+    expect(times == 2);
   });
 }
