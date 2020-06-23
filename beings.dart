@@ -47,7 +47,7 @@ class TestPlant extends Plant {
   PlantType get type => PlantType.test;
   TestPlant(this.callback);
   PlanCallback callback;
-  void tick(World w) => callback(w);
+  void _tick(World w) => callback(w);
 }
 
 class TestAnimal extends Animal{
