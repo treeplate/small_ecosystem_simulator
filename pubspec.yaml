@@ -1,3 +1,5 @@
 name: small_ecosystem_simulator
+environment:
+  sdk: '>=2.7.0'
 dev_dependencies:
   test: '1.15.1'
