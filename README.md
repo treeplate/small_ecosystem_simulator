@@ -8,7 +8,7 @@
 - Plants
   - After some time, have babies
 ## So far
-- `beings`
+- `_beings`
 - Beings
   - `_dead`
   - `static all`

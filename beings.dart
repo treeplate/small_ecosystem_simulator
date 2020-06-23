@@ -1,7 +1,29 @@
-Set<Being> _beings = {};
 abstract class Being {
   bool _dead = false;
-  static Set<Being> get all => _beings.where((Being being) => !being._dead);
+  void _tick() {}
+}
+class Plan {
+  Plan(this._callback);
+  factory Plan.idle() => Plan((World w) {});
+  factory Plan.addPlant(Plant Function() create) => Plan((World w) {w._addPlant(create);});
+  factory Plan.addAnimal(Animal Function() create) => Plan((World w) {w._addAnimal(create);});
+  final void Function(World w) _callback;
+}
+class World {
+  Set<Being> _beings = {};
+  void _addPlant(Plant Function() create) {
+    _beings.add(create());
+  }
+  void _addAnimal(Animal Function() create) {
+    _beings.add(create());
+  }
+  void tick(Plan plan) {
+    plan._callback(this);
+    for (Being being in _beings) {
+      being._tick();
+    }
+  }
+  Set<Being> get all => _beings.where((Being being) => !being._dead);
 }
 abstract class Plant extends Being {
   /// Should be entirely based on [runtimeType]
