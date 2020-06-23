@@ -23,7 +23,7 @@ class World {
       being._tick();
     }
   }
-  Set<Being> get all => _beings.where((Being being) => !being._dead);
+  Set<Being> get all => _beings.where((Being being) => !being._dead).toSet();
 }
 abstract class Plant extends Being {
   /// Should be entirely based on [runtimeType]
