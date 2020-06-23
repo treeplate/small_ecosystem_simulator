@@ -7,7 +7,7 @@ void main() {
   });
   var times = 0;
   var world = World();
-  Plan testPlan1 = Plan(() => times++);
+  Plan testPlan1 = Plan((World w) { times++; });
   test("World.tick ticks", () {
     world.tick(testPlan1);
     expect(times, equals(1));
