@@ -1,4 +1,4 @@
-import 'package:test/test.dart'
+import 'package:test/test.dart';
 import 'beings.dart';
 void main() {
   test("canEat works", () {
