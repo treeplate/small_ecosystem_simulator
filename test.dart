@@ -17,4 +17,12 @@ void main() {
     world.tick(plantTestPlan);
     expect(times, equals(2));
   });
+  test("Plants have babies", (){
+    world.tick(Plan.idle());
+    world.tick(Plan.idle());
+    world.tick(Plan.idle());
+    world.tick(Plan.idle());
+    //world.tick(Plan.idle());
+    print(world.all);
+  });
 }
