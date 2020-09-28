@@ -1,18 +1,17 @@
-abstract class Being {
-  bool _dead = false;
-  void _tick(World W) {}
-}
+import 'package:meta/meta.dart';
+import 'package:test/test.dart';
 
 typedef PlanCallback = void Function(World w);
-typedef AnimalFactory = Animal Function();
-typedef PlantFactory = Plant Function();
+typedef BeingFactory = Being Function();
 typedef Callback = void Function();
 
 class Plan {
   Plan(this._callback);
+  
   factory Plan.idle() => Plan((World w) {});
-  factory Plan.addPlant(PlantFactory create) => Plan((World w) {w._addPlant(create);});
-  factory Plan.addAnimal(AnimalFactory create) => Plan((World w) {w._addAnimal(create);});
+
+  factory Plan.addBeing(BeingFactory create) => Plan((World w) {w._addBeing(create);});
+
   factory Plan.feed(Animal a, Being f) => Plan((World w) {
     assert(w.all.contains(a));
     assert(w.all.contains(f));
@@ -22,76 +21,90 @@ class Plan {
       f.eat(a);
     }
   });
+
   factory Plan.group(List<Plan> plans) => Plan((World w) {
-    for(Plan plan in plans) {
+    for (Plan plan in plans) {
       plan._callback(w);
     }
   });
+
   final PlanCallback _callback;
 }
 
 class World {
   Set<Being> _beings = {};
-  void _addPlant(PlantFactory create) {
-    _beings.add(create());
+
+  void _addBeing(BeingFactory create) {
+    Being being = create();
+    assert(!being.dead);
+    assert(being.age == 0);
+    _beings.add(being);
   }
-  void _addAnimal(AnimalFactory create) {
-    _beings.add(create());
-  }
+
   void tick(Plan plan) {
+    assert(_afterPlans == null);
+    _afterPlans = [];
     plan._callback(this);
-    for (Being being in _beings) {
-      being._tick(this);
+    for (Being being in all) {
+      being.tick(this);
     }
+    Plan.group(_afterPlans)._callback(this);
+    _afterPlans = null;
   }
-  Set<Being> get all => _beings.where((Being being) => !being._dead).toSet();
+  
+  List<Plan> _afterPlans;
+  Set<Being> get all => _beings.where((Being being) => !being.dead).toSet();
+}
+
+abstract class Being {
+  int get health => _health;
+  int _health = 10;
+  
+  bool get dead => _health <= 0;
+
+  int get age => _ticks;
+  int _ticks = 0;
+
+  Being breed();
+
+  @protected
+  @mustCallSuper
+  void tick(World w) {
+    _health--;
+    _ticks++;
+  }
 }
 
 abstract class Plant extends Being {
-  /// Should be entirely based on [runtimeType]
-  int ticks = 0;
-  Plant create();
-  void _tick(World w) {
-    ticks++;
-    if(ticks == 5) {
-      w._addPlant(create);
+  void tick(World w) {
+    super.tick(w);
+    if (_ticks % 5 == 0) {
+      w._afterPlans.add(Plan.addBeing(breed));
     }
   }
-  PlantType get type;
 }
 
 abstract class Animal extends Being {
   /// For non-cannabalistic [Animal]s (cannabalistic ones don't call [super.canEat])
   bool canEat(Being being) {
-    return being is! Animal || !((being as Animal).type == type);
+    return being.runtimeType != runtimeType;
   }
 
   void eat(Being other) {
     assert(canEat(other));
-    other._dead = true;
+    _health += other._health;
+    other._health = 0;
+    _food.add(other);
   }
 
-  /// Should be entirely based on [runtimeType] 
-  AnimalType get type;
-
-  // an [int]? a List<[Being]>?
-  var _food;
-}
-
-class TestPlant extends Plant {
-  PlantType get type => PlantType.test;
-  TestPlant(this.callback);
-  Callback callback;
-  TestPlant create() => TestPlant((){});
-  void _tick(World w) {
-   super._tick(w);
-   callback();
+  void tick(World w) {
+    super.tick(w);
+    if (age == 20 && health > 50) {
+      if (w._beings.any((Being other) => other != this && other.runtimeType == runtimeType)) {
+        w._afterPlans.add(Plan.addBeing(breed));
+      }
+    }
   }
-}
 
-class TestAnimal extends Animal{
-  AnimalType get type => AnimalType.test;
+  List<Being> _food = <Being>[];
 }
-
-enum AnimalType { test }
-enum PlantType { test }
