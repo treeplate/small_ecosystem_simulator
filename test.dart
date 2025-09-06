@@ -81,7 +81,6 @@ void main() {
       ]));
       expect(mouse.dead, isTrue);
     }
-    print(cat1.health);
     expect(cat2.dead, isTrue);
     expect(cat1.dead, isFalse);
     expect(world.all.length, 2);
