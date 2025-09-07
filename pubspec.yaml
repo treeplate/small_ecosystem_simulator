@@ -4,4 +4,4 @@ environment:
 dependencies:
   meta: any
 dev_dependencies:
-  test: '1.13.0'
+  test: any
