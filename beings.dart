@@ -52,7 +52,7 @@ class World {
     _afterPlans = null;
   }
   
-  List<Plan> _afterPlans;
+  List<Plan>? _afterPlans;
   Set<Being> get all => _beings.where((Being being) => !being.dead).toSet();
 }
 
