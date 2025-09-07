@@ -48,7 +48,7 @@ class World {
     for (Being being in all) {
       being.tick(this);
     }
-    Plan.group(_afterPlans)._callback(this);
+    Plan.group(_afterPlans!)._callback(this);
     _afterPlans = null;
   }
   
@@ -79,7 +79,7 @@ abstract class Plant extends Being {
   void tick(World w) {
     super.tick(w);
     if (_ticks % 5 == 0) {
-      w._afterPlans.add(Plan.addBeing(breed));
+      w._afterPlans!.add(Plan.addBeing(breed));
     }
   }
 }
@@ -101,7 +101,7 @@ abstract class Animal extends Being {
     super.tick(w);
     if (age == 20 && health > 50) {
       if (w._beings.any((Being other) => other != this && other.runtimeType == runtimeType)) {
-        w._afterPlans.add(Plan.addBeing(breed));
+        w._afterPlans!.add(Plan.addBeing(breed));
       }
     }
   }
